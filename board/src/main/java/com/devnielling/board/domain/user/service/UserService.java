@@ -11,7 +11,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,11 +22,11 @@ import java.util.List;
 @Builder
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
@@ -44,11 +44,10 @@ public class UserService implements UserDetailsService {
         UserEntity entity = new UserEntity();
 
         entity.setUsername(username);
-        entity.setPassword(bCryptPasswordEncoder.encode(password));
+        entity.setPassword(passwordEncoder.encode(password));
         entity.setNickname(nickname);
         entity.setRole(UserRoleType.USER);
 
-        // setter 방식 말고 bulider로 변경하는게 좋을 듯.
         userRepository.save(entity);
     }
 
@@ -102,7 +101,7 @@ public class UserService implements UserDetailsService {
         UserEntity entity = userRepository.findByUsername(username).orElseThrow();
 
         if (dto.getPassword() != null && !dto.getPassword().isEmpty()) {
-            entity.setPassword(bCryptPasswordEncoder.encode(dto.getPassword()));
+            entity.setPassword(passwordEncoder.encode(dto.getPassword()));
         }
 
         if(dto.getNickname() != null && !dto.getNickname().isEmpty()) {
