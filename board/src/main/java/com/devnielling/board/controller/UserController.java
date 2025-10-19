@@ -18,11 +18,12 @@ public class UserController {
     }
 
     // 회원가입
+    // 회원가입 페이지 응답
     @GetMapping("/user/join")
     public String JoinPage() {
         return "join";
     }
-
+    // 회원가입 수행
     @PostMapping
     public String joinProcess(UserRequestDTO dto) {
         userService.createOneUser(dto);
@@ -38,11 +39,13 @@ public class UserController {
             model.addAttribute("USER", dto);
             return "update";
         }
-        return "redirect:/user/list";
+        return "redirect:/user/update/" + username;
     }
 
     @PostMapping("/user/update/{username}")
     public String updateProcess(@PathVariable("username") String username, UserRequestDTO dto) {
+
+        // User(본인) or admin 권한만 접근 가능
         if (userService.isAccess(username)) {
             userService.updateOneUser(dto, username);
         }
