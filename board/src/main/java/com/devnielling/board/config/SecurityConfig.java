@@ -38,6 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/**").permitAll()
                         .requestMatchers("/user/join").permitAll()
                         .requestMatchers("/user/update/**").hasRole("USER")
+                        .requestMatchers("/board/**").hasRole("USER")
                         .requestMatchers("/").permitAll()
                 );
 

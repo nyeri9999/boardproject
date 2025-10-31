@@ -24,7 +24,7 @@ public class BoardService {
     }
 
     @Transactional
-    public void CreateOneBoard(BoardRequestDTO dto) {
+    public void createOneBoard(BoardRequestDTO dto) {
 
         // dto -> entity
         BoardEntity boardEntity = new BoardEntity();
@@ -45,7 +45,7 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardResponseDTO readOnlyBoard(Long id) {
+    public BoardResponseDTO readOneBoard(Long id) {
         BoardEntity boardEntity = boardRepository.findById(id).orElseThrow();
 
         BoardResponseDTO dto = new BoardResponseDTO();
